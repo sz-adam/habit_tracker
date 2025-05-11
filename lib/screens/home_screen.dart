@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker/widget/Calendar.dart';
 import '../riverpod/name_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -25,11 +26,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
       ),
-      body: const Center(
-        child: Text(
-          'Home',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
+      body: Column(
+        children: [
+          Calendar()
+        ],
       ),
     );
   }
