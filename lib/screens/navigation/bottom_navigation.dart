@@ -1,4 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/screens/add_habit.dart';
 import 'package:habit_tracker/screens/home_screen.dart';
@@ -13,13 +12,34 @@ class BottomNavigation extends StatefulWidget {
 
 class _BottomNavigationState extends State<BottomNavigation> {
   int _selectedIndex = 0;
+  final PageController _pageController = PageController();
 
-  final List<Widget> _screens = [HomeScreen(), AddHabit(), SettingsScreen()];
+  final List<Widget> _screens = [
+    HomeScreen(),
+    SettingsScreen(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    _pageController.animateToPage(index,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut);
+  }
+
+  // Navigáció az AddHabit képernyőre
+  void _navigateToAddHabit() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddHabit()),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -27,22 +47,37 @@ class _BottomNavigationState extends State<BottomNavigation> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: CurvedNavigationBar(
-        index: _selectedIndex,
-        height: 60.0,
-        color: theme.colorScheme.primary,
-        buttonBackgroundColor: theme.colorScheme.secondary,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        items: <Widget>[
-          Icon(Icons.home, size: 30, color: Colors.white),
-          Icon(Icons.add, size: 45, color: Colors.white),
-          Icon(Icons.settings, size: 30, color: Colors.white),
-        ],
-        onTap: _onItemTapped,
-        animationDuration: Duration(milliseconds: 300),
-        animationCurve: Curves.linear,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        children: _screens,
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: theme.primaryColor,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: Colors.white,size: 30,),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings, color: Colors.white,size: 30,),
+            label: '',
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _navigateToAddHabit,
+        backgroundColor: theme.primaryColor,
+        child: Icon(Icons.add, color: Colors.white),
+
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
