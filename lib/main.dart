@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/riverpod/color_provider.dart';
 import 'package:habit_tracker/screens/navigation/bottom_navigation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/adapters.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('settings');
+
   runApp(ProviderScope(child: MyApp()));
 }
 
@@ -15,7 +20,6 @@ class MyApp extends ConsumerWidget {
     final selectedColor = ref.watch(colorProvider);
 
     final colorScheme = ColorScheme.fromSeed(seedColor: selectedColor);
-    final theme = Theme.of(context);
 
     return MaterialApp(
       title: 'Habit tracker',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 
 import '../riverpod/name_provider.dart';
 
@@ -69,10 +70,16 @@ class _UpdateNameState extends ConsumerState<UpdateName> {
               ),
               SizedBox(width: 12),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   final enteredName = _nameController.text;
                   if (enteredName.isNotEmpty) {
+                    // Riverpod állapot frissítése
                     ref.read(userNameProvider.notifier).state = enteredName;
+
+                    // Hive-ba mentés
+                    final box = Hive.box('settings');
+                    await box.put('userName', enteredName);
+
                     FocusScope.of(context).unfocus();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Name saved: $enteredName')),
