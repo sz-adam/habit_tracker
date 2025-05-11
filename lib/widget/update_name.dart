@@ -21,53 +21,78 @@ class _UpdateNameState extends ConsumerState<UpdateName> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Change name",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _nameController,
-                style: TextStyle(
-                  color: Colors.deepPurple,
-                  fontWeight: FontWeight.w600,
-                ),
-                decoration: InputDecoration(
-                  hintText: "Enter your name...",
-                  prefixIcon: Icon(Icons.person, color: Colors.deepPurple),
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
+    // téma elérése
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Change name",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: theme.primaryColor,
+            ),
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _nameController,
+                  style: TextStyle(
+                    color: theme.primaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: "Enter your name...",
+                    hintStyle: TextStyle(color: theme.primaryColor),
+                    prefixIcon: Icon(Icons.person, color: theme.primaryColor),
+                    filled: true,
+                    fillColor: theme.scaffoldBackgroundColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(
+                        color: theme.primaryColor,
+                        width: 2,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(width: 12),
-            ElevatedButton(
-              onPressed: () {
-                final enteredName = _nameController.text;
-                if (enteredName.isNotEmpty) {
-                  ref.read(userNameProvider.notifier).state = enteredName;
-                  FocusScope.of(context).unfocus();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Name saved: $enteredName')),
-                  );
-                  _nameController.clear();
-                }
-              },
-              child: Text("Save"),
-            ),
-          ],
-        ),
-      ],
+              SizedBox(width: 12),
+              ElevatedButton(
+                onPressed: () {
+                  final enteredName = _nameController.text;
+                  if (enteredName.isNotEmpty) {
+                    ref.read(userNameProvider.notifier).state = enteredName;
+                    FocusScope.of(context).unfocus();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Name saved: $enteredName')),
+                    );
+                    _nameController.clear();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 5,
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                child: Text("Save"),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

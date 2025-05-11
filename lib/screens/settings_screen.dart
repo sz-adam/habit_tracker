@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/widget/theme_selector.dart';
 import 'package:habit_tracker/widget/update_name.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -19,11 +20,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text("Settings")),
+      appBar: AppBar(
+        title: Text(
+          "Settings",
+          style: TextStyle(
+            color: theme.colorScheme.onPrimary.withOpacity(0.75),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: UpdateName()
+        child: Column(
+          children: [UpdateName(), SizedBox(height: 8), ThemeColorSelector()],
+        ),
       ),
     );
   }

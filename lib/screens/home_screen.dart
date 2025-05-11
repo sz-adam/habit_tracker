@@ -13,11 +13,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final userName = ref.watch(userNameProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           userName.isNotEmpty ? 'Welcome, $userName' : 'Welcome : User',
+          style: TextStyle(
+            color: theme.colorScheme.onPrimary.withOpacity(0.75),
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: const Center(

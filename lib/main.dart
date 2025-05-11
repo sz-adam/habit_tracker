@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/riverpod/color_provider.dart';
 import 'package:habit_tracker/screens/navigation/bottom_navigation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(
-    ProviderScope(
-      child:MyApp()
-    )
-  );
+  runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedColor = ref.watch(colorProvider);
+
+    final colorScheme = ColorScheme.fromSeed(seedColor: selectedColor);
+    final theme = Theme.of(context);
+
     return MaterialApp(
       title: 'Habit tracker',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: colorScheme,
+        scaffoldBackgroundColor: colorScheme.background.withOpacity(0.65),
+        appBarTheme: AppBarTheme(backgroundColor: colorScheme.primary),
       ),
       home: BottomNavigation(),
     );
