@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
 import '../riverpod/name_provider.dart';
+import 'input_field.dart';
 
 class UpdateName extends ConsumerStatefulWidget {
   const UpdateName({super.key});
@@ -42,31 +43,8 @@ class _UpdateNameState extends ConsumerState<UpdateName> {
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: _nameController,
-                  style: TextStyle(
-                    color: theme.primaryColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: "Enter your name...",
-                    hintStyle: TextStyle(color: theme.primaryColor),
-                    prefixIcon: Icon(Icons.person, color: theme.primaryColor),
-                    filled: true,
-                    fillColor: theme.scaffoldBackgroundColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
-                        color: theme.primaryColor,
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
+                child:
+                InputField(controller:_nameController, hintText:"Enter your name" ,icon: Icons.person)
               ),
               SizedBox(width: 12),
               ElevatedButton(
