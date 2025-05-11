@@ -1,16 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final IconData icon;
+  final int? maxLines;
 
   const InputField({
     super.key,
     required this.controller,
     required this.hintText,
     required this.icon,
+    this.maxLines,
   });
 
   @override
@@ -19,12 +20,10 @@ class InputField extends StatelessWidget {
 
     return TextField(
       controller: controller,
-      style: TextStyle(
-        color: theme.primaryColor,
-        fontWeight: FontWeight.w600,
-      ),
+      maxLines: maxLines ?? 1,
+      style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.w600),
       decoration: InputDecoration(
-        hintText: hintText,
+        labelText: hintText,
         hintStyle: TextStyle(color: theme.primaryColor),
         prefixIcon: Icon(icon, color: theme.primaryColor),
         filled: true,
@@ -35,10 +34,7 @@ class InputField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(
-            color: theme.primaryColor,
-            width: 2,
-          ),
+          borderSide: BorderSide(color: theme.primaryColor, width: 2),
         ),
       ),
     );
