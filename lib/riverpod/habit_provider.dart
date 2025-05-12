@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/habit_model.dart';
@@ -13,6 +14,7 @@ class HabitNotifier extends StateNotifier<Habit?> {
     String title,
     String description,
   Color color,
+    IconData icon,
     List<int> selectedDays,
     int? durationMinutes,
     DateTime startDate,
@@ -21,6 +23,7 @@ class HabitNotifier extends StateNotifier<Habit?> {
       title: title,
       description: description,
       color: color,
+      icon:icon,
       selectedDays: selectedDays,
       durationMinutes: durationMinutes,
       startDate: startDate,
