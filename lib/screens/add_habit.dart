@@ -4,6 +4,7 @@ import 'package:habit_tracker/widget/input_field.dart';
 import 'package:intl/intl.dart';
 import '../riverpod/date_provider.dart';
 import '../riverpod/habit_provider.dart';
+import '../widget/color_picker.dart';
 import '../widget/day/date_picker.dart';
 import '../widget/day/day_selector.dart';
 
@@ -19,6 +20,7 @@ class _AddHabitState extends ConsumerState<AddHabit> {
   final _descriptionController = TextEditingController();
   List<int> _selectedDays = [];
   int? _durationMinutes;
+  Color _selectedColor = Colors.blue;
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +64,18 @@ class _AddHabitState extends ConsumerState<AddHabit> {
               },
             ),
             SizedBox(height: 16),
+            //Szin választás
             Text('Select Habit Color:'),
             SizedBox(height: 8),
-            Row(
-              children: [
-                CircleAvatar(backgroundColor: Colors.blue),
-                SizedBox(width: 8),
-                Text('(Color picker here – implement later)'),
-              ],
+            ColorPicker(
+              selectedColor: _selectedColor,
+              onColorChanged: (color) {
+                setState(() {
+                  _selectedColor = color;
+                });
+              },
             ),
+
             SizedBox(height: 16),
             Text('Select Days to Repeat (optional):'),
             SizedBox(height: 8),
@@ -133,7 +138,7 @@ class _AddHabitState extends ConsumerState<AddHabit> {
   void _saveHabit(DateTime selectedDate) {
     final title = _titleController.text.trim();
     final description = _descriptionController.text.trim();
-
+    final color = _selectedColor;
     final days = _selectedDays;
 
     final duration = _durationMinutes;
@@ -141,11 +146,12 @@ class _AddHabitState extends ConsumerState<AddHabit> {
     // Mentés a Riverpod provider-be
     ref
         .read(habitProvider.notifier)
-        .saveHabit(title, description, days, duration, selectedDate);
+        .saveHabit(title, description,color, days, duration, selectedDate, );
 
     print('--- Habit Saved ---');
     print('Title: $title');
     print('Description: $description');
+    print('Color: $color');
     print('Days: ${days.isEmpty ? 'None selected' : days.join(', ')}');
     print('Duration: ${duration ?? 'Not specified'} minutes');
     print('Start Date: ${DateFormat.yMMMd().format(selectedDate)}');

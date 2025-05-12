@@ -3,7 +3,7 @@ import 'dart:ui';
 class Habit {
   String title;
   String? description;
-  //Color color;
+  Color color;
   List<int>? selectedDays;
   int? durationMinutes;
   DateTime startDate;
@@ -11,7 +11,7 @@ class Habit {
   Habit({
     required this.title,
     this.description,
-    // required this.color,
+     required this.color,
     this.selectedDays,
     this.durationMinutes,
     required this.startDate,

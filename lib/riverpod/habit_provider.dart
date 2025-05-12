@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/habit_model.dart';
@@ -10,6 +12,7 @@ class HabitNotifier extends StateNotifier<Habit?> {
   void saveHabit(
     String title,
     String description,
+  Color color,
     List<int> selectedDays,
     int? durationMinutes,
     DateTime startDate,
@@ -17,6 +20,7 @@ class HabitNotifier extends StateNotifier<Habit?> {
     final habit = Habit(
       title: title,
       description: description,
+      color: color,
       selectedDays: selectedDays,
       durationMinutes: durationMinutes,
       startDate: startDate,
