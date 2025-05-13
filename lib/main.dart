@@ -4,9 +4,13 @@ import 'package:habit_tracker/screens/navigation/bottom_navigation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import 'model/habit_model.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  Hive.registerAdapter(HabitAdapter());
+  await Hive.openBox<Habit>('habits');
   await Hive.openBox('settings');
 
   runApp(ProviderScope(child: MyApp()));
