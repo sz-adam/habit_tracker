@@ -5,8 +5,6 @@ import 'package:table_calendar/table_calendar.dart';
 import '../model/habit_model.dart';
 import '../riverpod/date_provider.dart';
 import '../riverpod/habit_provider.dart';
-import '../screens/add_habit.dart';
-import '../utils/day_option_dialog.dart';
 
 class Calendar extends ConsumerStatefulWidget {
   const Calendar({super.key});
@@ -50,15 +48,6 @@ class _CalendarState extends ConsumerState<Calendar> {
         setState(() {
           _focusedDay = focusedDay;
         });
-        final result = await showDayOptionsDialog(context);
-
-        //navigáció
-        if (result == 'add') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddHabit()),
-          );
-        }
       },
       calendarFormat: _calendarFormat,
       onFormatChanged: (format) {
@@ -74,18 +63,18 @@ class _CalendarState extends ConsumerState<Calendar> {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children:
-              events.map((e) {
-                final habit = e as Habit;
-                return Container(
-                  width: 6,
-                  height: 6,
-                  margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                  decoration: BoxDecoration(
-                    color: habit.color,
-                    shape: BoxShape.circle,
-                  ),
-                );
-              }).toList(),
+                  events.map((e) {
+                    final habit = e as Habit;
+                    return Container(
+                      width: 6,
+                      height: 6,
+                      margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                      decoration: BoxDecoration(
+                        color: habit.color,
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  }).toList(),
             );
           }
           return null;
