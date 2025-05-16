@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/screens/habit_details.dart';
 import '../model/habit_model.dart';
+import 'habit_details/habit_icon.dart';
 
 class HabitCard extends StatelessWidget {
   final Habit habit;
@@ -27,23 +29,12 @@ class HabitCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Ikon
-          Align(
+          HabitIconBubble(
+            icon: habit.icon,
             alignment: Alignment.topRight,
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.canvasColor.withOpacity(0.15),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white10,
-                    blurRadius: 6,
-                    offset: Offset(2, 2),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(12),
-              child: Icon(habit.icon, size: 32, color: theme.canvasColor),
-            ),
+            iconSize: 32,
+            backgroundColor: theme.canvasColor,
+            iconColor: theme.canvasColor,
           ),
 
           const SizedBox(height: 3),
@@ -76,7 +67,10 @@ class HabitCard extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // TODO: Start gomb működés
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HabitDetails(habit: habit)),
+                );
               },
               child: const Text('View'),
             ),
