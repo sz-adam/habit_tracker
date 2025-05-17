@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/widget/habit_details/count_down.dart';
 import 'package:habit_tracker/widget/habit_details/habit_actions_button.dart';
 import 'package:intl/intl.dart';
 import '../model/habit_model.dart';
+import '../riverpod/habit_provider.dart';
 import '../widget/habit_details/habit_icon.dart';
 import '../utils/timer_controller.dart';
 
-class HabitDetails extends StatefulWidget {
+class HabitDetails extends ConsumerStatefulWidget {
   final Habit habit;
 
   const HabitDetails({super.key, required this.habit});
 
   @override
-  State<HabitDetails> createState() => _HabitDetailsState();
+  ConsumerState<HabitDetails> createState() => _HabitDetailsState();
 }
 
-class _HabitDetailsState extends State<HabitDetails> {
-  late TimerController timerController;
+class _HabitDetailsState extends ConsumerState<HabitDetails> {
+  TimerController? timerController;
 
   @override
   void initState() {
     super.initState();
     if (widget.habit.durationMinutes != null) {
       timerController = TimerController(durationMinutes: widget.habit.durationMinutes!);
-      timerController.onCountdownComplete = _showCountdownCompletedDialog;
+      timerController!.onCountdownComplete = _showCountdownCompletedDialog;
     }
   }
 
   @override
   void dispose() {
-    timerController.dispose();
+    timerController?.dispose();
     super.dispose();
   }
 
@@ -38,7 +40,7 @@ class _HabitDetailsState extends State<HabitDetails> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Ready!"),
-        content: Text("Congratulations, you have successfully completed it.!"),
+        content: Text("Congratulations, you have successfully completed it!"),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -92,16 +94,16 @@ class _HabitDetailsState extends State<HabitDetails> {
                 ),
               ),
             SizedBox(height: 24),
-            if (habit.durationMinutes != null)
+            if (habit.durationMinutes != null && timerController != null)
               AnimatedBuilder(
-                animation: timerController,
+                animation: timerController!,
                 builder: (context, _) => CountDown(
-                  remaining: timerController.remaining,
-                  isCountingDown: timerController.isCountingDown,
-                  isPaused: timerController.isPaused,
-                  onStart: timerController.start,
-                  onPause: timerController.pause,
-                  onResume: timerController.resume,
+                  remaining: timerController!.remaining,
+                  isCountingDown: timerController!.isCountingDown,
+                  isPaused: timerController!.isPaused,
+                  onStart: timerController!.start,
+                  onPause: timerController!.pause,
+                  onResume: timerController!.resume,
                   buttonColor: habit.color,
                 ),
               ),
@@ -123,7 +125,10 @@ class _HabitDetailsState extends State<HabitDetails> {
         child: HabitActionsButton(
           habit: habit,
           primaryColor: theme.colorScheme.primary,
-          onDelete: () => Navigator.pop(context),
+          onDelete: () async {
+            await ref.read(habitProvider.notifier).deleteHabit(widget.habit);
+            Navigator.pop(context);
+          },
           onEdit: _editHabit,
         ),
       ),

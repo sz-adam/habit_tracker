@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/widget/colorAndIcon/icon_picker.dart';
 import 'package:habit_tracker/widget/input_field.dart';
-import 'package:intl/intl.dart';
 import '../riverpod/date_provider.dart';
 import '../riverpod/habit_provider.dart';
 import '../widget/colorAndIcon/colorAndIconPicker.dart';
-import '../widget/colorAndIcon/color_picker.dart';
 import '../widget/day/date_picker.dart';
 import '../widget/day/day_selector.dart';
 
@@ -67,19 +64,14 @@ class _AddHabitState extends ConsumerState<AddHabit> {
               },
             ),
             SizedBox(height: 16),
-
             ColorAndIconPicker(
               selectedColor: _selectedColor,
               selectedIcon: _selectedIcon ?? Icons.star,
               onColorChanged: (color) {
-                setState(() {
-                  _selectedColor = color;
-                });
+                setState(() => _selectedColor = color);
               },
               onIconChanged: (icon) {
-                setState(() {
-                  _selectedIcon = icon;
-                });
+                setState(() => _selectedIcon = icon);
               },
             ),
             SizedBox(height: 16),
@@ -87,16 +79,14 @@ class _AddHabitState extends ConsumerState<AddHabit> {
               'Select Days to Repeat (optional):',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.primary,
+                color: theme.colorScheme.primary,
               ),
             ),
             SizedBox(height: 8),
             DaySelector(
               selectedDays: _selectedDays,
-              onSelectedDaysChanged: (selectedDays) {
-                setState(() {
-                  _selectedDays = selectedDays;
-                });
+              onSelectedDaysChanged: (days) {
+                setState(() => _selectedDays = days);
               },
             ),
             if (_selectedDays.isNotEmpty)
@@ -112,11 +102,7 @@ class _AddHabitState extends ConsumerState<AddHabit> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: "Duration (Optional)",
-                hintStyle: TextStyle(color: theme.primaryColor),
-                prefixIcon: Icon(
-                  Icons.hourglass_bottom,
-                  color: theme.primaryColor,
-                ),
+                prefixIcon: Icon(Icons.hourglass_bottom, color: theme.primaryColor),
                 filled: true,
                 fillColor: theme.scaffoldBackgroundColor,
                 border: OutlineInputBorder(
@@ -147,28 +133,23 @@ class _AddHabitState extends ConsumerState<AddHabit> {
     );
   }
 
-  void _saveHabit(DateTime selectedDate) {
+  Future<void> _saveHabit(DateTime selectedDate) async {
     final title = _titleController.text.trim();
     final description = _descriptionController.text.trim();
     final color = _selectedColor;
     final icon = _selectedIcon ?? Icons.star;
     final days = _selectedDays;
-
     final duration = _durationMinutes;
 
-    // Mentés a Riverpod provider-be
-    ref
-        .read(habitProvider.notifier)
-        .saveHabit(title, description, color, icon, days, duration, selectedDate);
-
-    print('--- Habit Saved ---');
-    print('Title: $title');
-    print('Description: $description');
-    print('Color: $color');
-    print('Icon : $icon');
-    print('Days: ${days.isEmpty ? 'None selected' : days.join(', ')}');
-    print('Duration: ${duration ?? 'Not specified'} minutes');
-    print('Start Date: ${DateFormat.yMMMd().format(selectedDate)}');
+    await ref.read(habitProvider.notifier).saveHabit(
+      title,
+      description,
+      color,
+      icon,
+      days,
+      duration,
+      selectedDate,
+    );
 
     Navigator.pop(context);
   }

@@ -1,27 +1,32 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import '../model/habit_model.dart';
 
+final habitBoxProvider = Provider<Box<Habit>>((ref) {
+  return Hive.box<Habit>('habits');
+});
+
 final habitProvider = StateNotifierProvider<HabitNotifier, List<Habit>>((ref) {
-  return HabitNotifier();
+  final box = ref.watch(habitBoxProvider);
+  return HabitNotifier(box);
 });
 
 class HabitNotifier extends StateNotifier<List<Habit>> {
-  HabitNotifier() : super([]) {
-    loadHabits();
-  }
+  final Box<Habit> _habitBox;
 
-  Future<void> loadHabits() async {
-    final box = Hive.box<Habit>('habits');
-    state = box.values.toList();
-  }
+  HabitNotifier(this._habitBox) : super(_habitBox.values.toList());
 
-  Future<void> saveHabit(String title, String? description, Color color, IconData icon,
-      List<int>? selectedDays, int? durationMinutes, DateTime startDate) async {
-    final habit = Habit(
+  Future<void> saveHabit(
+      String title,
+      String description,
+      Color color,
+      IconData icon,
+      List<int> selectedDays,
+      int? durationMinutes,
+      DateTime startDate,
+      ) async {
+    final newHabit = Habit(
       title: title,
       description: description,
       color: color,
@@ -31,9 +36,12 @@ class HabitNotifier extends StateNotifier<List<Habit>> {
       startDate: startDate,
     );
 
-    final box = Hive.box<Habit>('habits');
-    await box.add(habit); // Hive mentés
+    await _habitBox.add(newHabit);
+    state = [...state, newHabit];
+  }
 
-    state = [...state, habit];
+  Future<void> deleteHabit(Habit habit) async {
+    await habit.delete();
+    state = _habitBox.values.toList();
   }
 }

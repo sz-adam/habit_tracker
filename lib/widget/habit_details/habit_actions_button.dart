@@ -131,7 +131,6 @@ class HabitActionsButton extends StatelessWidget {
     );
 
     if (confirm == true) {
-      await habit.delete();
       onDelete();
     }
   }
