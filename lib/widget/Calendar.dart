@@ -22,16 +22,30 @@ class _CalendarState extends ConsumerState<Calendar> {
     final selectedDay = ref.watch(selectedDateProvider);
     final habits = ref.watch(habitProvider);
 
-    // habitok csoportosítása dátum alapján
+    // habitok csoportosítása dátum alapján , repetdaysel együtt
     Map<DateTime, List<Habit>> events = {};
-    for (var habit in habits) {
-      final date = DateTime(
-        habit.startDate.year,
-        habit.startDate.month,
-        habit.startDate.day,
-      );
-      events.putIfAbsent(date, () => []).add(habit);
+
+    final today = DateTime.now();
+    for (final habit in habits) {
+      final start = DateTime(habit.startDate.year, habit.startDate.month, habit.startDate.day);
+      final end = today.add(const Duration(days: 60));
+
+      for (int i = 0; i <= end.difference(start).inDays; i++) {
+        final current = start.add(Duration(days: i));
+        final weekdayIndex = current.weekday - 1;
+
+        final repeats = habit.selectedDays;
+        final shouldAdd = (repeats == null || repeats.isEmpty)
+            ? current == start
+            : repeats.contains(weekdayIndex);
+
+        if (shouldAdd) {
+          final dateKey = DateTime(current.year, current.month, current.day);
+          events.putIfAbsent(dateKey, () => []).add(habit);
+        }
+      }
     }
+
     //eltávolítja az órát, percet, másodpercet. Visszaadjuk a habitokat
     List<Habit> _getEventsForDay(DateTime day) {
       final key = DateTime(day.year, day.month, day.day);
