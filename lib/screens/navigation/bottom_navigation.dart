@@ -30,9 +30,27 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   // Navigáció az AddHabit képernyőre
   void _navigateToAddHabit() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddHabit()),
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: true, // az előző oldal ne legyen látható
+        transitionDuration: Duration(milliseconds: 400),
+        pageBuilder: (context, animation, secondaryAnimation) => AddHabit(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
+            )),
+            child: Material(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: child,
+            ),
+          );
+        },
+      ),
     );
   }
 
