@@ -74,15 +74,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           )
               : Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'No habit for selected day.',
-              style: TextStyle(
-                fontSize: 24,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: 1),
+              duration: Duration(milliseconds: 600),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, (1 - value) * 20),
+                    child: child,
+                  ),
+                );
+              },
+              child: Text(
+                'No habit for selected day.',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurface,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
         ],
