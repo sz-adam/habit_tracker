@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/widget/Calendar.dart';
-import 'package:habit_tracker/widget/habit_card.dart';
+import '../animation/animation_habit_card.dart';
 import '../riverpod/habit_provider.dart';
 import '../riverpod/name_provider.dart';
 import '../riverpod/date_provider.dart';
@@ -64,7 +64,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               itemBuilder: (context, index) {
                 final habit = filteredHabits[index];
-                return HabitCard(habit: habit);
+                return AnimatedHabitCard(
+                  key: ValueKey(habit.key),
+                  habit: habit,
+                  delay: index * 400,
+                );
               },
             ),
           )
