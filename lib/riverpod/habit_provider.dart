@@ -24,21 +24,36 @@ class HabitNotifier extends StateNotifier<List<Habit>> {
       IconData icon,
       List<int> selectedDays,
       int? durationMinutes,
-      DateTime startDate,
-      ) async {
-    final newHabit = Habit(
-      title: title,
-      description: description,
-      color: color,
-      icon: icon,
-      selectedDays: selectedDays,
-      durationMinutes: durationMinutes,
-      startDate: startDate,
-    );
+      DateTime startDate, {
+        Habit? habit,
+      }) async {
+    if (habit != null) {
+      habit.title = title;
+      habit.description = description;
+      habit.colorValue = color.value;
+      habit.iconCodePoint = icon.codePoint;
+      habit.selectedDays = selectedDays;
+      habit.durationMinutes = durationMinutes;
+      habit.startDate = startDate;
 
-    await _habitBox.add(newHabit);
-    state = [...state, newHabit];
+      await habit.save();
+      state = _habitBox.values.toList();
+    } else {
+      final newHabit = Habit(
+        title: title,
+        description: description,
+        color: color,
+        icon: icon,
+        selectedDays: selectedDays,
+        durationMinutes: durationMinutes,
+        startDate: startDate,
+      );
+
+      await _habitBox.add(newHabit);
+      state = [...state, newHabit];
+    }
   }
+
 
   Future<void> deleteHabit(Habit habit) async {
     await habit.delete();

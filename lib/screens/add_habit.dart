@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/widget/input_field.dart';
+import '../model/habit_model.dart';
 import '../riverpod/date_provider.dart';
 import '../riverpod/habit_provider.dart';
 import '../widget/colorAndIcon/colorAndIconPicker.dart';
@@ -8,7 +9,8 @@ import '../widget/day/date_picker.dart';
 import '../widget/day/day_selector.dart';
 
 class AddHabit extends ConsumerStatefulWidget {
-  const AddHabit({super.key});
+  final Habit? habit;
+  const AddHabit({super.key, this.habit});
 
   @override
   ConsumerState<AddHabit> createState() => _AddHabitState();
@@ -23,6 +25,24 @@ class _AddHabitState extends ConsumerState<AddHabit> {
   IconData? _selectedIcon = Icons.star;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.habit != null) {
+      _titleController.text = widget.habit!.title;
+      _descriptionController.text = widget.habit!.description ?? '';
+      _selectedColor = widget.habit!.color;
+      _selectedIcon = widget.habit!.icon;
+      _selectedDays = widget.habit!.selectedDays ?? [];
+      _durationMinutes = widget.habit!.durationMinutes;
+
+      // Késleltetett frissítés
+      Future(() {
+        ref.read(selectedDateProvider.notifier).state = widget.habit!.startDate;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final selectedDate = ref.watch(selectedDateProvider) ?? DateTime.now();
@@ -30,7 +50,7 @@ class _AddHabitState extends ConsumerState<AddHabit> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add Habit',
+          widget.habit != null ? 'Edit Habit' : 'Add Habit',
           style: TextStyle(
             color: theme.colorScheme.onPrimary.withOpacity(0.75),
             fontWeight: FontWeight.bold,
@@ -124,7 +144,7 @@ class _AddHabitState extends ConsumerState<AddHabit> {
             Center(
               child: ElevatedButton(
                 onPressed: () => _saveHabit(selectedDate),
-                child: Text('Save Habit'),
+                child: Text(widget.habit != null ? 'Update Habit' : 'Save Habit'),
               ),
             ),
           ],
@@ -149,6 +169,7 @@ class _AddHabitState extends ConsumerState<AddHabit> {
       days,
       duration,
       selectedDate,
+      habit: widget.habit,
     );
 
     Navigator.pop(context);

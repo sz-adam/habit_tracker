@@ -7,6 +7,7 @@ import '../model/habit_model.dart';
 import '../riverpod/habit_provider.dart';
 import '../widget/habit_details/habit_icon.dart';
 import '../utils/timer_controller.dart';
+import 'add_habit.dart';
 
 class HabitDetails extends ConsumerStatefulWidget {
   final Habit habit;
@@ -158,7 +159,13 @@ class _HabitDetailsState extends ConsumerState<HabitDetails> {
     );
   }
 
-  void _editHabit() {
-    // TODO: szerkesztési logika implementálása
+  void _editHabit() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddHabit(habit: widget.habit),
+      ),
+    );
+    setState(() {});
   }
 }
