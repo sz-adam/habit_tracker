@@ -49,6 +49,7 @@ class _AddHabitState extends ConsumerState<AddHabit> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: theme.colorScheme.onPrimary,),
         title: Text(
           widget.habit != null ? 'Edit Habit' : 'Add Habit',
           style: TextStyle(
